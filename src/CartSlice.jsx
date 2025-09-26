@@ -17,7 +17,7 @@ export const CartSlice = createSlice({
                 // If item does not exist, add it to the cart with quantity 1
                 state.items.push({ name, image, cost, quantity: 1 }); // add new product
             }
-        
+
         },
         // Remove item from cart by name
         removeItem: (state, action) => {
@@ -30,9 +30,9 @@ export const CartSlice = createSlice({
             if (itemToUpdate) {
                 itemToUpdate.quantity = quantity; // If the item is found, update its quantity to the new value
             }
-          },
         },
-    });
+    },
+});
 
 export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
 

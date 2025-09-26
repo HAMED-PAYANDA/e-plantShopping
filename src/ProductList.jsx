@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux'; // Import Redux dispatch
+import { useDispatch, useSelector } from 'react-redux'; // Import Redux dispatch
 import { addItem } from './CartSlice'; // Import action from CartSlice
-import './ProductList.css'
+import './ProductList.css';
 import CartItem from './CartItem';
+
 function ProductList({ onHomeClick }) {
-    const dispatch = useDispatch(); // Setup dispatch 
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
     const [addedToCart, setAddedToCart] = useState({}); // New state for cart items
+
+    const dispatch = useDispatch();
+    const cartItems = useSelector(state => state.cart.items);
 
     const plantsArray = [
         {
@@ -266,6 +269,11 @@ function ProductList({ onHomeClick }) {
         }));
     };
 
+    // Calculate total quantity in cart
+    const calculateTotalQuantity = () => {
+        return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    };
+
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -291,18 +299,18 @@ function ProductList({ onHomeClick }) {
                     {plantsArray.map((category, index) => ( // Loop through each category in plantsArray
                         <div key={index}> {/* Unique key for each category div */}
                             <h1>
-                            <div>{category.category}</div> {/* Display the category name */}
+                                <div>{category.category}</div> {/* Display the category name */}
                             </h1>
-                                <div className="product-list"> {/* Container for the list of plant cards */}
-                                    {category.plants.map((plant, plantIndex) => ( // Loop through each plant in the current category
+                            <div className="product-list"> {/* Container for the list of plant cards */}
+                                {category.plants.map((plant, plantIndex) => ( // Loop through each plant in the current category
                                     <div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
-                                        <img 
-                                            className="product-image" 
+                                        <img
+                                            className="product-image"
                                             src={plant.image} // Display the plant image
                                             alt={plant.name} // Alt text for accessibility
                                         />
                                         <div className="product-title">{plant.name}</div> {/* Display plant name */}
-                                            {/* Display other plant details like description and cost */}
+                                        {/* Display other plant details like description and cost */}
                                         <div className="product-description">{plant.description}</div> {/* Display plant description */}
                                         <div className="product-cost">${plant.cost}</div> {/* Display plant cost */}
                                         <button
@@ -312,13 +320,13 @@ function ProductList({ onHomeClick }) {
                                             Add to Cart
                                         </button>
                                     </div>
-                                    ))}
-                                </div>
+                                ))}
                             </div>
-                            ))}  
+                        </div>
+                    ))}
 
-                    </div>
-                ) : (
+                </div>
+            ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
             )}
         </div>
